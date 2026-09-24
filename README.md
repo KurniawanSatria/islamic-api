@@ -59,11 +59,16 @@ Fitur utama:
 |`/quran/word`|[/quran/word](https://islamic-api.vercel.app/quran/word)|Semua kata|
 |`/quran/word/{surahId}`|[/quran/word/1](https://islamic-api.vercel.app/quran/word/1)|Semua Kata berdasarkan Surah|
 |`/quran/word/{surahId}/{ayahId}`|[/quran/word/1/1](https://islamic-api.vercel.app/quran/word/1/1)|Semua Kata berdasarkan Spesifik Ayat dari Surah|
-|`/doa`|[/doa](https://islamic-api.vercel.app/doa)|Kumpulan Doa|
-|`/doa/{sumber}`|[/doa/harian](https://islamic-api.vercel.app/doa/harian)|Spesifik Kategori Doa (quran, hadits, pilihan, harian, ibadah, haji, lainnya)|
+|`/doa`|[/doa](https://islamic-api.vercel.app/doa)|Kumpulan Doa||`/doa/{sumber}`|[/doa/harian](https://islamic-api.vercel.app/doa/harian)|Spesifik Kategori Doa (quran, hadits, pilihan, harian, ibadah, haji, lainnya)|
 |`/dzikir/{sumber}`|[/dzikir/pagi](https://islamic-api.vercel.app/dzikir/pagi)|Dzikir Harian (pagi, sore, solat)|
 |`/hadits`|[/hadits](https://islamic-api.vercel.app/hadits)|Daftar Hadits|
 |`/hadits/{nomor}`|[/hadits/1](https://islamic-api.vercel.app/hadits/1)|Spesifik Hadits berdasarkan Nomor|
+|`/sholat/kabkota/semua`|[/sholat/kabkota/semua](https://islamic-api.vercel.app/sholat/kabkota/semua)|Daftar kota (kompat myquran: id+lokasi)|
+|`/sholat/kabkota?q=`|[/sholat/kabkota?q=bandung](https://islamic-api.vercel.app/sholat/kabkota?q=bandung)|Cari kota (support ?page=&limit=)|
+|`/sholat/kabkota/{id}`|[/sholat/kabkota/kota-bandung](https://islamic-api.vercel.app/sholat/kabkota/kota-bandung)|Detail kota + lat/lng/timezone|
+|`/sholat/jadwal/{id}/today`|[/sholat/jadwal/kota-jakarta-pusat/today](https://islamic-api.vercel.app/sholat/jadwal/kota-jakarta-pusat/today)|Jadwal hari ini (offline, Kemenag: Fajr 20°/Isya 18°)|
+|`/sholat/jadwal/{id}/{date}`|[/sholat/jadwal/kota-makassar/2026-01-01](https://islamic-api.vercel.app/sholat/jadwal/kota-makassar/2026-01-01)|Jadwal per tanggal YYYY-MM-DD|
+|`/sholat/jadwal?lat=&lng=`|[/sholat/jadwal?lat=-6.2&lng=106.85](https://islamic-api.vercel.app/sholat/jadwal?lat=-6.2&lng=106.85)|Jadwal koordinat bebas (+tanggal/tz)|
 
 ## Project
 Contoh aplikasi saya menggunakan api ini.

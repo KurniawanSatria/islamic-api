@@ -101,6 +101,42 @@ test("health + unknown route + headers", async () => {
   assert.strictEqual(r.headers["x-content-type-options"], "nosniff");
 });
 
+test("sholat kabkota list + search + detail", async () => {
+  const all = await json("/sholat/kabkota/semua");
+  assert.strictEqual(all.status, 200);
+  assert.ok(all.data.data.length >= 40);
+  assert.ok(all.data.data[0].id && all.data.data[0].lokasi);
+  const q = await json("/sholat/kabkota?q=bandung");
+  assert.strictEqual(q.status, 200);
+  assert.ok(q.data.data.length >= 1);
+  assert.ok(q.data.data[0].lokasi.includes("BANDUNG"));
+  const one = await json("/sholat/kabkota/kota-bandung");
+  assert.strictEqual(one.status, 200);
+  assert.strictEqual(one.data.data.id, "kota-bandung");
+  assert.strictEqual((await get("/sholat/kabkota/kota-ngawur")).status, 404);
+});
+
+test("sholat jadwal offline (today/date/coord) + validation", async () => {
+  const today = await json("/sholat/jadwal/kota-jakarta-pusat/today");
+  assert.strictEqual(today.status, 200);
+  const keys = Object.keys(today.data.data.jadwal);
+  assert.strictEqual(keys.length, 1);
+  const j = today.data.data.jadwal[keys[0]];
+  for (const k of ["imsak", "subuh", "terbit", "dhuha", "dzuhur", "ashar", "maghrib", "isya"]) {
+    assert.match(j[k], /^\d{2}:\d{2}$/, k);
+  }
+  const dated = await json("/sholat/jadwal/kota-makassar/2026-01-01");
+  assert.strictEqual(dated.status, 200);
+  assert.ok(dated.data.data.jadwal["2026-01-01"]);
+  assert.strictEqual((await get("/sholat/jadwal/kota-makassar/2026-13-99")).status, 400);
+  assert.strictEqual((await get("/sholat/jadwal/kota-ngawur/today")).status, 404);
+  const coord = await json("/sholat/jadwal?lat=-6.2&lng=106.85&tanggal=2026-01-01&tz=Asia/Jakarta");
+  assert.strictEqual(coord.status, 200);
+  assert.strictEqual(coord.data.data.jadwal.dzuhur.length, 5);
+  assert.strictEqual((await get("/sholat/jadwal?lat=999&lng=106")).status, 400);
+  assert.strictEqual((await get("/sholat/jadwal?lat=-6&lng=106&tz=Asia/Ngawur")).status, 400);
+});
+
 (async () => {
   const child = fork("index.js", { env: { ...process.env, PORT: String(PORT) }, silent: true });
   const ready = await new Promise((resolve) => {

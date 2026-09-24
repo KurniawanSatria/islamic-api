@@ -4,6 +4,7 @@ const quran = require("../controllers/quranController");
 const doa = require("../controllers/doaController");
 const dzikir = require("../controllers/dzikirController");
 const hadits = require("../controllers/haditsController");
+const sholat = require("../controllers/sholatController");
 const router = express.Router();
 
 // Health check (no caching, cheap, for load balancers/uptime monitors)
@@ -84,6 +85,14 @@ router.get("/dzikir/:source", dzikir.getDzikir);
 // Hadits routes
 router.get("/hadits", hadits.getAllHadits);
 router.get("/hadits/:nomor", hadits.getHadits);
+
+// Sholat routes (offline kalkulasi, Kemenag-compatible: Fajr 20°/Isha 18°)
+router.get("/sholat/kabkota/semua", sholat.getAllKabkotaSemua);
+router.get("/sholat/kabkota", sholat.getKabkota);
+router.get("/sholat/kabkota/:id", sholat.getKabkotaById);
+router.get("/sholat/jadwal", sholat.getJadwalByCoord);
+router.get("/sholat/jadwal/:id/today", sholat.getJadwalToday);
+router.get("/sholat/jadwal/:id/:date", sholat.getJadwalByDate);
 
 // Handle 404 for all other routes
 router.all("*", (req, res) =>

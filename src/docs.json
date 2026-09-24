@@ -36,6 +36,10 @@
       "description": "Hadits-related operations"
     },
     {
+      "name": "sholat",
+      "description": "Prayer times (offline, Kemenag-compatible)"
+    },
+    {
       "name": "system",
       "description": "Health and spec"
     }
@@ -1211,6 +1215,306 @@
             "required": true,
             "schema": {
               "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/sholat/kabkota/semua": {
+      "get": {
+        "tags": [
+          "sholat"
+        ],
+        "summary": "All cities (myquran-compat)",
+        "operationId": "getAllKabkotaSemua",
+        "responses": {
+          "200": {
+            "description": "id+lokasi list for dropdowns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sholat/kabkota": {
+      "get": {
+        "tags": [
+          "sholat"
+        ],
+        "summary": "Search cities",
+        "operationId": "getKabkota",
+        "responses": {
+          "200": {
+            "description": "Filter with ?q=&page=&limit=",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (1-500, default 20). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 20
+            }
+          }
+        ]
+      }
+    },
+    "/sholat/kabkota/{id}": {
+      "get": {
+        "tags": [
+          "sholat"
+        ],
+        "summary": "Single city",
+        "operationId": "getKabkotaById",
+        "responses": {
+          "200": {
+            "description": "City with lat/lng/timezone",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "City slug, e.g. kota-bandung",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/sholat/jadwal": {
+      "get": {
+        "tags": [
+          "sholat"
+        ],
+        "summary": "Prayer times by coordinate",
+        "operationId": "getJadwalByCoord",
+        "responses": {
+          "200": {
+            "description": "Offline calc: ?lat=&lng=&tanggal=&tz=",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude -90..90",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "description": "Longitude -180..180",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "tanggal",
+            "in": "query",
+            "description": "YYYY-MM-DD, default today in tz",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "Asia/Jakarta|Asia/Makassar|Asia/Jayapura|Asia/Pontianak",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/sholat/jadwal/{id}/today": {
+      "get": {
+        "tags": [
+          "sholat"
+        ],
+        "summary": "Today's prayer times",
+        "operationId": "getJadwalToday",
+        "responses": {
+          "200": {
+            "description": "Myquran-compat shape",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "City slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tz",
+            "in": "query",
+            "description": "Override city timezone",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/sholat/jadwal/{id}/{date}": {
+      "get": {
+        "tags": [
+          "sholat"
+        ],
+        "summary": "Prayer times by date",
+        "operationId": "getJadwalByDate",
+        "responses": {
+          "200": {
+            "description": "Date as YYYY-MM-DD",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "City slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "description": "YYYY-MM-DD",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           }
         ]
