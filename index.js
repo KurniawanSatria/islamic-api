@@ -9,7 +9,20 @@ const PORT = process.env.PORT || 3000;
 
 app.set("trust proxy", 1);
 app.disable("x-powered-by");
-app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        // Docs page (/) loads Scalar from jsDelivr + one inline init script
+        "script-src": ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+        "img-src": ["'self'", "data:", "https:"],
+        "connect-src": ["'self'", "https:"],
+      },
+    },
+  })
+);
 app.use(compression());
 app.use(cors());
 app.use(express.json({ limit: "100kb" }));
