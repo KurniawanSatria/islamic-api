@@ -46,6 +46,12 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log("Running at port:", PORT);
-});
+// Only listen on direct run (node index.js). On Vercel serverless the
+// exported app is invoked per-request instead.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log("Running at port:", PORT);
+  });
+}
+
+module.exports = app;
