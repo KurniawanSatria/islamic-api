@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Quran API",
-    "description": "This is a simple API",
+    "title": "Muslim API",
+    "description": "REST API Al-Quran Indonesia (Kemenag), Dzikir Harian, Kumpulan Doa, Hadits Arba'in.",
     "contact": {
       "email": "satganzdevs@gmail.com"
     },
@@ -10,11 +10,16 @@
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "servers": [
     {
-      "url": "https://muslim-api-two.vercel.app/"
+      "url": "https://api.dikiotang.com",
+      "description": "Production"
+    },
+    {
+      "url": "https://muslim-api-two.vercel.app/",
+      "description": "Vercel"
     }
   ],
   "tags": [
@@ -33,6 +38,10 @@
     {
       "name": "hadits",
       "description": "Hadits-related operations"
+    },
+    {
+      "name": "system",
+      "description": "Health and spec"
     }
   ],
   "paths": {
@@ -41,18 +50,15 @@
         "tags": [
           "quran"
         ],
-        "summary": "Get all Surah",
+        "summary": "List all Surah",
         "operationId": "getAllSurah",
         "responses": {
           "200": {
-            "description": "List of all Surah",
+            "description": "114 Surah",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/inline_response_200"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -65,33 +71,51 @@
         "tags": [
           "quran"
         ],
-        "summary": "Get specific Surah",
+        "summary": "Surah info",
         "operationId": "getSurah",
-        "parameters": [
-          {
-            "name": "surahId",
-            "in": "path",
-            "description": "The ID of the Surah",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Details of the Surah",
+            "description": "Single Surah",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200"
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "surahId",
+            "in": "path",
+            "description": "Surah number 1-114",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
       }
     },
     "/quran/juz": {
@@ -99,18 +123,15 @@
         "tags": [
           "quran"
         ],
-        "summary": "Get all Juz",
+        "summary": "List all Juz",
         "operationId": "getAllJuz",
         "responses": {
           "200": {
-            "description": "List of all Juz",
+            "description": "30 Juz",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/inline_response_200_1"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -123,33 +144,51 @@
         "tags": [
           "quran"
         ],
-        "summary": "Get specific Juz",
+        "summary": "Juz info",
         "operationId": "getJuz",
-        "parameters": [
-          {
-            "name": "juzId",
-            "in": "path",
-            "description": "The ID of the Juz",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Details of the Juz",
+            "description": "Single Juz",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200_1"
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "juzId",
+            "in": "path",
+            "description": "Juz number 1-30",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
       }
     },
     "/quran/ayah": {
@@ -157,23 +196,55 @@
         "tags": [
           "quran"
         ],
-        "summary": "Get all Ayah",
+        "summary": "All ayahs (paginable)",
         "operationId": "getAllAyah",
         "responses": {
           "200": {
-            "description": "List of all Ayah",
+            "description": "6236 ayahs, use ?page=&limit=",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/inline_response_200_2"
-                  }
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (1-500, default 20). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 20
+            }
+          }
+        ]
       }
     },
     "/quran/ayah/surah/{surahId}": {
@@ -181,36 +252,710 @@
         "tags": [
           "quran"
         ],
-        "summary": "Get Ayah by Surah",
+        "summary": "Ayahs by Surah",
         "operationId": "getAyahSurah",
+        "responses": {
+          "200": {
+            "description": "All ayahs of a Surah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "surahId",
             "in": "path",
-            "description": "The ID of the Surah",
+            "description": "Surah number 1-114",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "integer"
             }
           }
+        ]
+      }
+    },
+    "/quran/ayah/{surahId}/{startId}-{endId}": {
+      "get": {
+        "tags": [
+          "quran"
         ],
+        "summary": "Ayah range",
+        "operationId": "getAyahRange",
         "responses": {
           "200": {
-            "description": "List of Ayah in the specified Surah",
+            "description": "e.g. /quran/ayah/114/1-3",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/inline_response_200_2"
-                  }
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "surahId",
+            "in": "path",
+            "description": "Surah number 1-114",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "startId",
+            "in": "path",
+            "description": "Start ayah (>=1)",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "endId",
+            "in": "path",
+            "description": "End ayah (>= start)",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/ayah/{surahId}/{ayahId}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Single ayah",
+        "operationId": "getAyah",
+        "responses": {
+          "200": {
+            "description": "e.g. /quran/ayah/114/1",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "surahId",
+            "in": "path",
+            "description": "Surah number 1-114",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "ayahId",
+            "in": "path",
+            "description": "Ayah number",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/ayah/juz/{juzId}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Ayahs by Juz",
+        "operationId": "getAyahJuz",
+        "responses": {
+          "200": {
+            "description": "All ayahs of a Juz",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "juzId",
+            "in": "path",
+            "description": "Juz number 1-30",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/ayah/page/{pageId}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Ayahs by Mushaf page",
+        "operationId": "getAyahPage",
+        "responses": {
+          "200": {
+            "description": "Page 1-604",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "path",
+            "description": "Mushaf page 1-604",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/asbab": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "List Asbab Nuzul",
+        "operationId": "getAllAsbab",
+        "responses": {
+          "200": {
+            "description": "All Asbab Nuzul entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
           }
         }
+      }
+    },
+    "/quran/asbab/{id}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Single Asbab Nuzul",
+        "operationId": "getAsbab",
+        "responses": {
+          "200": {
+            "description": "Asbab Nuzul by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Asbab id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/asma": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Asmaul Husna",
+        "operationId": "getAsma",
+        "responses": {
+          "200": {
+            "description": "99 names of Allah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quran/tafsir": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "All tafsir (paginable)",
+        "operationId": "getAllTafsir",
+        "responses": {
+          "200": {
+            "description": "Large dataset, use ?page=&limit=",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (1-500, default 20). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 20
+            }
+          }
+        ]
+      }
+    },
+    "/quran/tafsir/{id}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Tafsir by ayah id",
+        "operationId": "getTafsir",
+        "responses": {
+          "200": {
+            "description": "Kemenag tafsir for one ayah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Ayah id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/theme": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "All themes",
+        "operationId": "getAllTheme",
+        "responses": {
+          "200": {
+            "description": "Quranic topics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quran/theme/{id}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Single theme",
+        "operationId": "getTheme",
+        "responses": {
+          "200": {
+            "description": "Topic by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Theme id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/word": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "All words (paginable)",
+        "operationId": "getAllWord",
+        "responses": {
+          "200": {
+            "description": "Word-by-word, large dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (1-500, default 20). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 20
+            }
+          }
+        ]
+      }
+    },
+    "/quran/word/{surahId}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Words by Surah",
+        "operationId": "getWordSurah",
+        "responses": {
+          "200": {
+            "description": "All words of a Surah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "surahId",
+            "in": "path",
+            "description": "Surah number 1-114",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/quran/word/{surahId}/{ayahId}": {
+      "get": {
+        "tags": [
+          "quran"
+        ],
+        "summary": "Words by ayah",
+        "operationId": "getWord",
+        "responses": {
+          "200": {
+            "description": "Word-by-word of one ayah",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "surahId",
+            "in": "path",
+            "description": "Surah number 1-114",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "ayahId",
+            "in": "path",
+            "description": "Ayah number",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
       }
     },
     "/doa": {
@@ -218,23 +963,55 @@
         "tags": [
           "doa"
         ],
-        "summary": "Get all Doa",
+        "summary": "All doa (paginable)",
         "operationId": "getAllDoa",
         "responses": {
           "200": {
-            "description": "List of all Doa",
+            "description": "Full doa collection",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/inline_response_200_3"
-                  }
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (1-500, default 20). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 20
+            }
+          }
+        ]
       }
     },
     "/doa/{source}": {
@@ -242,33 +1019,50 @@
         "tags": [
           "doa"
         ],
-        "summary": "Get specific Doa by source",
+        "summary": "Doa by category",
         "operationId": "getDoa",
-        "parameters": [
-          {
-            "name": "source",
-            "in": "path",
-            "description": "The source of the Doa",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Details of the Doa",
+            "description": "One category of doa",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200_3"
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "source",
+            "in": "path",
+            "description": "Doa category",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "quran",
+                "hadits",
+                "pilihan",
+                "harian",
+                "ibadah",
+                "haji",
+                "lainnya"
+              ]
+            }
+          }
+        ]
       }
     },
     "/dzikir/{source}": {
@@ -276,33 +1070,46 @@
         "tags": [
           "dzikir"
         ],
-        "summary": "Get Dzikir by source",
+        "summary": "Dzikir",
         "operationId": "getDzikir",
-        "parameters": [
-          {
-            "name": "source",
-            "in": "path",
-            "description": "The source of the Dzikir",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Details of the Dzikir",
+            "description": "Morning/evening/after-prayer dzikir",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200_4"
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "source",
+            "in": "path",
+            "description": "Dzikir set",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pagi",
+                "sore",
+                "solat"
+              ]
+            }
+          }
+        ]
       }
     },
     "/hadits": {
@@ -310,23 +1117,55 @@
         "tags": [
           "hadits"
         ],
-        "summary": "Get all Hadits",
+        "summary": "All Hadits Arba'in (paginable)",
         "operationId": "getAllHadits",
         "responses": {
           "200": {
-            "description": "List of all Hadits",
+            "description": "42 hadits",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/inline_response_200_5"
-                  }
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-based). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Items per page (1-500, default 20). Omit both for full legacy response.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 20
+            }
+          }
+        ]
       }
     },
     "/hadits/{nomor}": {
@@ -334,28 +1173,88 @@
         "tags": [
           "hadits"
         ],
-        "summary": "Get specific Hadits",
+        "summary": "Single hadits",
         "operationId": "getHadits",
+        "responses": {
+          "200": {
+            "description": "Hadits by number 1-42",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (malformed parameter)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "name": "nomor",
             "in": "path",
-            "description": "The number of the Hadits",
+            "description": "Hadits number 1-42",
             "required": true,
-            "style": "simple",
-            "explode": false,
             "schema": {
               "type": "integer"
             }
           }
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "system"
         ],
+        "summary": "Health check",
+        "operationId": "getHealth",
         "responses": {
           "200": {
-            "description": "Details of the Hadits",
+            "description": "Uptime + memory, never cached",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/inline_response_200_5"
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/docs.json": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "OpenAPI spec",
+        "operationId": "getSpec",
+        "responses": {
+          "200": {
+            "description": "This OpenAPI document as JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
                 }
               }
             }
@@ -366,81 +1265,20 @@
   },
   "components": {
     "schemas": {
-      "inline_response_200": {
+      "Error": {
         "type": "object",
         "properties": {
-          "id": {
+          "code": {
             "type": "integer",
-            "example": 1
+            "example": 404
           },
-          "name": {
+          "status": {
             "type": "string",
-            "example": "Al-Fatiha"
-          }
-        }
-      },
-      "inline_response_200_1": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
+            "example": "Not Found."
           },
-          "name": {
+          "message": {
             "type": "string",
-            "example": "Juz 1"
-          }
-        }
-      },
-      "inline_response_200_2": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "text": {
-            "type": "string",
-            "example": "In the name of Allah, the Most Gracious, the Most Merciful."
-          }
-        }
-      },
-      "inline_response_200_3": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "text": {
-            "type": "string",
-            "example": "O Allah, grant us success."
-          }
-        }
-      },
-      "inline_response_200_4": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "text": {
-            "type": "string",
-            "example": "Subhanallah, Alhamdulillah, Allahu Akbar."
-          }
-        }
-      },
-      "inline_response_200_5": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "example": 1
-          },
-          "text": {
-            "type": "string",
-            "example": "The best of you are those who have the best manners."
+            "example": "Surah 999 is not found."
           }
         }
       }

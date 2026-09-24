@@ -3,9 +3,14 @@ const juz = require("./json/juz.json");
 const ayah = require("./json/ayah.json");
 const asbab = require("./json/asbab_nuzul.json");
 const asma = require("./json/asmaul_husna.json");
-const tafsir = require("./json/tafsir.json");
 const theme = require("./json/theme.json");
-const word = require("./json/word.json");
+
+// tafsir (14MB) + word (13MB) are lazy-loaded on first use so boot stays
+// fast and serverless cold starts don't pay for unused datasets.
+let _tafsir = null;
+let _word = null;
+const loadTafsir = () => _tafsir || (_tafsir = require("./json/tafsir.json"));
+const loadWord = () => _word || (_word = require("./json/word.json"));
 
 const getAllSurah = () => {
   return surah;
@@ -47,7 +52,7 @@ const getAyahRange = (surahId, startId, endId) => {
       result.push(ayah[index]);
     }
   }
-  return result.slice(startId - 1, endId - 1);
+  return result.slice(startId - 1, endId);
 };
 const getAyahJuz = (juzId) => {
   var result = [];
@@ -84,9 +89,10 @@ const getAsma = () => {
   return asma;
 };
 const getAllTafsir = () => {
-  return tafsir;
+  return loadTafsir();
 };
 const getTafsir = (id) => {
+  const tafsir = loadTafsir();
   var result = [];
   for (let index = 0; index < tafsir.length; index++) {
     if (tafsir[index].id == id) {
@@ -108,9 +114,10 @@ const getTheme = (id) => {
   return result;
 };
 const getAllWord = () => {
-  return word;
+  return loadWord();
 };
 const getWordSurah = (surahId) => {
+  const word = loadWord();
   var result = [];
   for (let index = 0; index < word.length; index++) {
     const element = word[index];
@@ -121,6 +128,7 @@ const getWordSurah = (surahId) => {
   return result;
 };
 const getWord = (surahId, ayahId) => {
+  const word = loadWord();
   var result = [];
   for (let index = 0; index < word.length; index++) {
     const element = word[index];

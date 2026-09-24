@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "npm install",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "node scripts/test.js",
+    "docs": "python3 scripts/gen-docs.py"
   },
   "keywords": [],
   "author": "Otang45",
@@ -15,7 +17,10 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "compression": "^1.8.2",
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0"
   }
 }
