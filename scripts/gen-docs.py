@@ -123,15 +123,14 @@ paths["/docs.json"] = {"get": {**ok("OpenAPI spec", "getSpec", "This OpenAPI doc
 spec = {
     "openapi": "3.0.0",
     "info": {
-        "title": "Muslim API",
+        "title": "Islamic API",
         "description": "REST API Al-Quran Indonesia (Kemenag), Dzikir Harian, Kumpulan Doa, Hadits Arba'in.",
         "contact": {"email": "satganzdevs@gmail.com"},
         "license": {"name": "Apache 2.0", "url": "http://www.apache.org/licenses/LICENSE-2.0.html"},
         "version": "1.1.0",
     },
     "servers": [
-        {"url": "https://api.dikiotang.com", "description": "Production"},
-        {"url": "https://muslim-api-two.vercel.app/", "description": "Vercel"},
+        {"url": "https://islamic-api.vercel.app", "description": "Production"},
     ],
     "tags": [
         {"name": "quran", "description": "Quran-related operations"},
